@@ -126,6 +126,7 @@ footer{margin-top:30px;font-size:12px;color:var(--ink3);text-align:center}
     <span class="pill">2026: <b id="p26">—</b></span>
     <span class="pill">2027: <b id="p27">—</b></span>
     <span class="pill">Atualizado em <b id="pData">—</b></span>
+    <span class="pill" id="pFonte">Carregando…</span>
   </div>
 </header>
 
@@ -233,13 +234,14 @@ footer{margin-top:30px;font-size:12px;color:var(--ink3);text-align:center}
 //# sourceMappingURL=chart.umd.js.map
 </script>
 <script>
-/* ================= DADOS (atualizar a cada mês / semana) =================
-   meses[i].real27 : faturamento realizado de 2027 no mês (null = não lançado)
-   resto2026       : Nov e Dez de 2026. "fechado" = total do mês quando fechar (null = em aberto);
-                     enquanto estiver aberto, lance cada semana fechada em semanas[].valor */
-const DATA = {
+/* ================= FONTE DOS DADOS =================
+   O dashboard lê a planilha ao abrir, pela ponte (Apps Script) da planilha de METAS.
+   Se a ponte não responder, usa a CÓPIA SALVA abaixo (última versão publicada). */
+const PONTE_URL = 'https://script.google.com/macros/s/AKfycbxOi1tAjaRFQkXO2dkup-0UToP6mJlC9pu8L0FQkNrdnUR6Rs4GWkoRjv7XbI7PR-BP/exec';
+const CLIENTE = "Beth's Cleaning Services";
+const DATA_SALVO = {
  "cliente": "Beth's Cleaning Services",
- "atualizado": "24/11/2026",
+ "atualizado": "25/11/2026",
  "crescMinima": 0.45,
  "acresc": [
   0.45,
@@ -253,7 +255,6 @@ const DATA = {
    "f25": 27353,
    "f26": 29040,
    "base": 29040,
-   "proj26": 34017.70868724667,
    "origem": "Real",
    "metas": [
     42108,
@@ -261,14 +262,14 @@ const DATA = {
     50950.68,
     56045.748
    ],
-   "real27": null
+   "real27": null,
+   "proj26": 34017.70868724666
   },
   {
    "mes": "Fevereiro",
    "f25": 23825,
    "f26": 24972,
    "base": 24972,
-   "proj26": 29630.092109591336,
    "origem": "Real",
    "metas": [
     36209.4,
@@ -276,29 +277,29 @@ const DATA = {
     43813.374,
     48194.7114
    ],
-   "real27": null
+   "real27": null,
+   "proj26": 29630.092109591333
   },
   {
    "mes": "Março",
    "f25": 26495,
    "f26": 30460.19,
    "base": 30460.19,
-   "proj26": 32950.65227465362,
    "origem": "Real",
    "metas": [
     44167.2755,
     48584.00305,
-    53442.403355,
-    58786.6436905
+    53442.40336,
+    58786.64369
    ],
-   "real27": null
+   "real27": null,
+   "proj26": 32950.652274653614
   },
   {
    "mes": "Abril",
    "f25": 28220,
    "f26": 30425,
    "base": 30425,
-   "proj26": 35095.95799927251,
    "origem": "Real",
    "metas": [
     44116.25,
@@ -306,14 +307,14 @@ const DATA = {
     53380.6625,
     58718.72875
    ],
-   "real27": null
+   "real27": null,
+   "proj26": 35095.957999272505
   },
   {
    "mes": "Maio",
    "f25": 26725,
    "f26": 33560,
    "base": 33560,
-   "proj26": 33236.69303793614,
    "origem": "Real",
    "metas": [
     48662,
@@ -321,14 +322,14 @@ const DATA = {
     58881.02,
     64769.122
    ],
-   "real27": null
+   "real27": null,
+   "proj26": 33236.69303793613
   },
   {
    "mes": "Junho",
    "f25": 30345,
    "f26": 36690,
    "base": 36690,
-   "proj26": 37738.72592090448,
    "origem": "Real",
    "metas": [
     53200.5,
@@ -336,14 +337,14 @@ const DATA = {
     64372.605,
     70809.8655
    ],
-   "real27": null
+   "real27": null,
+   "proj26": 37738.72592090447
   },
   {
    "mes": "Julho",
    "f25": 34180,
    "f26": 43149,
    "base": 43149,
-   "proj26": 42508.14473476734,
    "origem": "Real",
    "metas": [
     62566.05,
@@ -351,14 +352,14 @@ const DATA = {
     75704.9205,
     83275.41255
    ],
-   "real27": null
+   "real27": null,
+   "proj26": 42508.14473476733
   },
   {
    "mes": "Agosto",
    "f25": 29330,
    "f26": 38962,
    "base": 38962,
-   "proj26": 36476.415595983795,
    "origem": "Real",
    "metas": [
     56494.9,
@@ -366,14 +367,14 @@ const DATA = {
     68358.829,
     75194.7119
    ],
-   "real27": null
+   "real27": null,
+   "proj26": 36476.41559598379
   },
   {
    "mes": "Setembro",
    "f25": 28782.5,
    "f26": 44003,
    "base": 44003,
-   "proj26": 35795.51421382215,
    "origem": "Real",
    "metas": [
     63804.35,
@@ -381,14 +382,14 @@ const DATA = {
     77203.2635,
     84923.58985
    ],
-   "real27": null
+   "real27": null,
+   "proj26": 35795.51421382214
   },
   {
    "mes": "Outubro",
    "f25": 32030,
    "f26": 46023,
    "base": 46023,
-   "proj26": 39834.28542582206,
    "origem": "Real",
    "metas": [
     66733.35,
@@ -396,37 +397,38 @@ const DATA = {
     80747.3535,
     88822.08885
    ],
-   "real27": null
+   "real27": null,
+   "proj26": 39834.285425822054
   },
   {
    "mes": "Novembro",
    "f25": 27440,
    "f26": null,
-   "base": 34125.906715097,
-   "proj26": 34125.906715097015,
+   "base": 34125.90672,
    "origem": "Projetado",
    "metas": [
-    49482.5647368907,
-    54430.8212105797,
-    59873.9033316377,
-    65861.2936648015
+    49482.56474,
+    54430.82121,
+    59873.90333,
+    65861.29366
    ],
-   "real27": null
+   "real27": null,
+   "proj26": 34125.90671509701
   },
   {
    "mes": "Dezembro",
    "f25": 28456,
    "f26": null,
-   "base": 35389.4606955102,
-   "proj26": 35389.46069551022,
+   "base": 35389.4607,
    "origem": "Projetado",
    "metas": [
-    51314.7180084898,
-    56446.1898093388,
-    62090.8087902727,
-    68299.8896693
+    51314.71801,
+    56446.18981,
+    62090.80879,
+    68299.88967
    ],
-   "real27": null
+   "real27": null,
+   "proj26": 35389.46069551022
   }
  ],
  "resto2026": [
@@ -437,17 +439,17 @@ const DATA = {
     {
      "ini": "2026-11-01",
      "fim": "2026-11-07",
-     "valor": null
+     "valor": 8737
     },
     {
      "ini": "2026-11-08",
      "fim": "2026-11-14",
-     "valor": null
+     "valor": 9625
     },
     {
      "ini": "2026-11-15",
      "fim": "2026-11-21",
-     "valor": null
+     "valor": 12125
     },
     {
      "ini": "2026-11-22",
@@ -836,6 +838,41 @@ const DATA = {
  ]
 };
 
+/* ===== Monta o objeto DATA a partir das abas da planilha (resposta da ponte Apps Script) ===== */
+function montarDATA(raw, cliente){
+  const MESES=['Janeiro','Fevereiro','Março','Abril','Maio','Junho','Julho','Agosto','Setembro','Outubro','Novembro','Dezembro'];
+  const A=raw.abas, mt=A['METAS 2027'], s26=A['SEMANAS 2026'], s27=A['SEMANAS 2027'];
+  if(!mt||!s26||!s27) throw new Error('Abas METAS 2027 / SEMANAS 2026 / SEMANAS 2027 não encontradas');
+  const num=v=>{ if(v===''||v==null) return null; if(typeof v==='number') return v;
+    const n=Number(String(v).replace(/[$\s]/g,'').replace(/\./g,'').replace(',','.')); return isNaN(n)?null:n; };
+  const txt=v=>String(v==null?'':v).trim();
+  const achar=(rows,f)=>rows.find(f);
+  // Parâmetros
+  const rCresc=achar(mt,r=>txt(r[0]).startsWith('Quanto quer crescer'));
+  const rAcr=achar(mt,r=>txt(r[0]).startsWith('Acréscimo de cada meta'));
+  if(!rCresc||!rAcr) throw new Error('Parâmetros da aba METAS 2027 não encontrados');
+  // Meses (primeira ocorrência de cada nome na coluna B da METAS 2027)
+  const meses=MESES.map(nome=>{
+    const r=achar(mt,x=>txt(x[1])===nome);
+    if(!r) throw new Error('Mês '+nome+' não encontrado na METAS 2027');
+    return {mes:nome,f25:num(r[2]),f26:num(r[3]),base:num(r[5]),origem:txt(r[6]),
+            metas:[num(r[8]),num(r[9]),num(r[10]),num(r[11])],real27:num(r[12])};
+  });
+  // Projeção 2026 = 2025 do mês × crescimento acumulado dos meses de 2026 já fechados
+  const fech=meses.filter(m=>m.f26!=null);
+  const fator=fech.reduce((s,m)=>s+m.f26,0)/fech.reduce((s,m)=>s+m.f25,0);
+  meses.forEach(m=>m.proj26=m.f25*fator);
+  // Semanas: linhas com "Sem N" na coluna B
+  const semanas=(rows,nomeMes,colValor)=>rows.filter(r=>txt(r[0])===nomeMes&&/^Sem\s*\d+/.test(txt(r[1])))
+     .map(r=>({ini:txt(r[2]).slice(0,10),fim:txt(r[3]).slice(0,10),valor:num(r[colValor])}));
+  const resto2026=[10,11].map(idx=>({idx,fechado:meses[idx].f26,semanas:semanas(s26,MESES[idx],7)}));
+  const semanas27=MESES.map(n=>semanas(s27,n,9));
+  const d=raw.atualizado?new Date(raw.atualizado):new Date();
+  const atualizado=d.toLocaleDateString('pt-BR')+' '+d.toLocaleTimeString('pt-BR',{hour:'2-digit',minute:'2-digit'});
+  return {cliente,atualizado,crescMinima:num(rCresc[4]),acresc:rAcr.slice(8,12).map(num),meses,resto2026,semanas27};
+}
+</script>
+<script type="text/plain" id="logica">
 /* ================= LÓGICA ================= */
 const TIERS=[{k:'Mínima',c:'#DC2626'},{k:'Básica',c:'#CA8A04'},{k:'Master',c:'#16A34A'},{k:'Mega Master',c:'#B45309'}];
 const ABR=['Jan','Fev','Mar','Abr','Mai','Jun','Jul','Ago','Set','Out','Nov','Dez'];
@@ -1105,6 +1142,28 @@ document.querySelectorAll('.tab').forEach(t=>t.onclick=()=>{
   build(t.dataset.t);
 });
 build('t26');
+</script>
+<script>
+(async function(){
+  const pill=document.getElementById('pFonte');
+  let DATA=DATA_SALVO, aoVivo=false;
+  if(PONTE_URL){
+    try{
+      const ctl=new AbortController(); const to=setTimeout(()=>ctl.abort(),12000);
+      const r=await fetch(PONTE_URL,{cache:'no-store',signal:ctl.signal}); clearTimeout(to);
+      const raw=await r.json();
+      if(!raw.ok) throw new Error('resposta inválida');
+      DATA=montarDATA(raw,CLIENTE); aoVivo=true;
+    }catch(e){ console.warn('Ponte indisponível, usando cópia salva:',e); }
+  }
+  pill.innerHTML=aoVivo?'<b style="color:#16A34A">●</b> Direto da planilha'
+                       :'<b style="color:#CA8A04">●</b> Cópia salva';
+  pill.title=aoVivo?'Números lidos da planilha agora':'Não foi possível ler a planilha; mostrando a última versão salva';
+  window.__DATA=DATA;
+  const s=document.createElement('script');
+  s.text='const DATA=window.__DATA;\n'+document.getElementById('logica').textContent;
+  document.body.appendChild(s);
+})();
 </script>
 </body>
 </html>
